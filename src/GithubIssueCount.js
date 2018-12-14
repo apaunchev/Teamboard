@@ -1,11 +1,13 @@
 import React from "react";
 import fetch from "unfetch";
-import Widget from "./Widget";
 import { basicAuthHeader } from "./lib/auth";
+import Widget from "./Widget";
+import Counter from "./Counter";
 
 class GithubIssueCount extends React.PureComponent {
   static defaultProps = {
-    interval: 1000 * 60 * 5
+    interval: 1000 * 60 * 5,
+    title: "Open GitHub Issues"
   };
 
   state = {
@@ -41,10 +43,11 @@ class GithubIssueCount extends React.PureComponent {
 
   render() {
     const { count, loading, error } = this.state;
+    const { title } = this.props;
 
     return (
-      <Widget loading={loading} error={error}>
-        {count}
+      <Widget loading={loading} error={error} title={title}>
+        <Counter value={count} />
       </Widget>
     );
   }

@@ -1,9 +1,21 @@
 import React from "react";
 import Widget from "./Widget";
+import styled from "styled-components";
+import tinytime from "tinytime";
+
+const TimeItem = styled.div`
+  font-size: 4em;
+  text-align: center;
+`;
+
+const DateItem = styled.div`
+  font-size: 1.5em;
+  text-align: center;
+`;
 
 class DateTime extends React.PureComponent {
   static defaultProps = {
-    interval: 1000 * 60
+    interval: 1000
   };
 
   state = {
@@ -22,7 +34,14 @@ class DateTime extends React.PureComponent {
   }
 
   render() {
-    return <Widget>{this.state.date.toLocaleString()}</Widget>;
+    const { date } = this.state;
+
+    return (
+      <Widget>
+        <TimeItem>{tinytime("{H}:{mm}").render(date)}</TimeItem>
+        <DateItem>{tinytime("{DD}.{Mo}.{YYYY}").render(date)}</DateItem>
+      </Widget>
+    );
   }
 }
 
