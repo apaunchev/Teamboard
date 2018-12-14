@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "js-base64": "^2.4.9",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-scripts": "2.1.1"
+    "react-scripts": "2.1.1",
+    "unfetch": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

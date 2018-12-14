@@ -4651,6 +4651,10 @@ joi@^11.1.1:
     isemail "3.x.x"
     topo "2.x.x"
 
+js-base64@^2.4.9:
+  version "2.4.9"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.9.tgz#748911fb04f48a60c4771b375cac45a80df11c03"
+
 js-levenshtein@^1.1.3:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/js-levenshtein/-/js-levenshtein-1.1.4.tgz#3a56e3cbf589ca0081eb22cd9ba0b1290a16d26e"
@@ -7909,6 +7913,10 @@ uglifyjs-webpack-plugin@^1.2.4:
     uglify-es "^3.3.4"
     webpack-sources "^1.1.0"
     worker-farm "^1.5.2"
+
+unfetch@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/unfetch/-/unfetch-4.0.1.tgz#8750c4c7497ade75d40387d7dbc4ba024416b8f6"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
