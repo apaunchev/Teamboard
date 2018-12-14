@@ -3,7 +3,7 @@ import Widget from "./Widget";
 
 class DateTime extends React.PureComponent {
   static defaultProps = {
-    interval: 1000 * 60 // 60 seconds
+    interval: 1000 * 60
   };
 
   state = {
