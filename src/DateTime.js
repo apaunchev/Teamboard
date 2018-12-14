@@ -11,14 +11,14 @@ class DateTime extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.timeout = setTimeout(
+    this.interval = setInterval(
       () => this.setState({ date: new Date() }),
       this.props.interval
     );
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timeout);
+    clearInterval(this.interval);
   }
 
   render() {
