@@ -1,13 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { size } from "polished";
+import { size, modularScale } from "polished";
 
 const Container = styled.div`
   ${size("20em")}
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   margin: 1em;
   padding: 1em;
   background-color: ${props => props.theme.palette.canvasColor};
@@ -15,8 +13,8 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  margin-bottom: 0;
-  text-align: center;
+  font-size: ${modularScale(2)};
+  font-weight: 400;
 `;
 
 export default ({ children, error = false, loading = false, title = "" }) => {

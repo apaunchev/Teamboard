@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { modularScale } from "polished";
 
 const Counter = styled.div`
-  font-size: 4em;
+  font-size: ${modularScale(5)};
+  font-weight: 500;
   color: ${props => props.theme.palette.accentColor};
 `;
 

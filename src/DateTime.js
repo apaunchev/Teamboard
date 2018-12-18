@@ -1,16 +1,15 @@
 import React from "react";
 import Widget from "./Widget";
 import styled from "styled-components";
+import { modularScale } from "polished";
 import moment from "moment-timezone";
 
 const TimeItem = styled.div`
-  font-size: 4em;
-  text-align: center;
+  font-size: ${modularScale(5)};
 `;
 
 const DateItem = styled.div`
-  font-size: 1.5em;
-  text-align: center;
+  font-size: ${modularScale(2)};
 `;
 
 class DateTime extends React.PureComponent {
