@@ -4,10 +4,9 @@ import { basicAuthHeader } from "../../../lib/auth";
 import Widget from "../../widget";
 import Counter from "../../counter";
 
-class GithubIssueCount extends React.PureComponent {
+class GithubSearchCount extends React.PureComponent {
   static defaultProps = {
-    interval: 1000 * 60 * 5,
-    title: "Open GitHub Issues"
+    interval: 1000 * 60 * 5
   };
 
   state = {
@@ -21,18 +20,18 @@ class GithubIssueCount extends React.PureComponent {
   }
 
   async fetchData() {
-    const { authKey, owner, repository } = this.props;
+    const { authKey, query } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
 
     try {
       const res = await fetch(
-        `https://api.github.com/repos/${owner}/${repository}`,
+        `https://api.github.com/search/issues?q=${query}`,
         opts
       );
       const json = await res.json();
 
       this.setState({
-        count: json.open_issues_count,
+        count: json.total_count || 0,
         loading: false,
         error: false
       });
@@ -47,10 +46,10 @@ class GithubIssueCount extends React.PureComponent {
 
     return (
       <Widget loading={loading} error={error} title={title}>
-        <Counter value={count} />
+        <Counter value={count.toLocaleString()} />
       </Widget>
     );
   }
 }
 
-export default GithubIssueCount;
+export default GithubSearchCount;
