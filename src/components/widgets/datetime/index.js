@@ -1,5 +1,5 @@
 import React from "react";
-import Widget from "./Widget";
+import Widget from "../../widget";
 import styled from "styled-components";
 import { modularScale } from "polished";
 import moment from "moment-timezone";

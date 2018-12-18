@@ -1,8 +1,8 @@
 import React from "react";
 import fetch from "unfetch";
-import { basicAuthHeader } from "./lib/auth";
-import Widget from "./Widget";
-import Counter from "./Counter";
+import { basicAuthHeader } from "../../../lib/auth";
+import Widget from "../../widget";
+import Counter from "../../counter";
 
 class GithubIssueCount extends React.PureComponent {
   static defaultProps = {

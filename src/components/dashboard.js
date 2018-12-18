@@ -27,7 +27,6 @@ export default ({ children, theme }) => (
   <ThemeProvider theme={theme}>
     <Container>
       {children}
-
       <GlobalStyle />
     </Container>
   </ThemeProvider>

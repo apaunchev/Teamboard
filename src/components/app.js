@@ -1,8 +1,8 @@
 import React from "react";
-import lightTheme from "./themes/lightTheme";
-import Dashboard from "./Dashboard";
-import DateTime from "./DateTime";
-import GithubIssueCount from "./GithubIssueCount";
+import Dashboard from "./dashboard";
+import DateTime from "./widgets/datetime";
+import GithubIssueCount from "./widgets/github/issue-count";
+import lightTheme from "../themes/light-theme";
 
 export default () => (
   <div className="App">
