@@ -1,7 +1,7 @@
 import React from "react";
 import Widget from "./Widget";
 import styled from "styled-components";
-import tinytime from "tinytime";
+import moment from "moment-timezone";
 
 const TimeItem = styled.div`
   font-size: 4em;
@@ -19,12 +19,12 @@ class DateTime extends React.PureComponent {
   };
 
   state = {
-    date: new Date()
+    date: moment()
   };
 
   componentDidMount() {
     this.interval = setInterval(
-      () => this.setState({ date: new Date() }),
+      () => this.setState({ date: moment() }),
       this.props.interval
     );
   }
@@ -35,11 +35,12 @@ class DateTime extends React.PureComponent {
 
   render() {
     const { date } = this.state;
+    const { timezone, title } = this.props;
 
     return (
-      <Widget>
-        <TimeItem>{tinytime("{H}:{mm}").render(date)}</TimeItem>
-        <DateItem>{tinytime("{DD}.{Mo}.{YYYY}").render(date)}</DateItem>
+      <Widget title={title}>
+        <TimeItem>{date.tz(timezone).format("LT")}</TimeItem>
+        <DateItem>{date.tz(timezone).format("LL")}</DateItem>
       </Widget>
     );
   }

@@ -4,12 +4,12 @@
   "private": true,
   "dependencies": {
     "js-base64": "^2.4.9",
+    "moment-timezone": "^0.5.23",
     "polished": "^2.3.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1",
     "styled-components": "^4.1.2",
-    "tinytime": "^0.2.6",
     "unfetch": "^4.0.1"
   },
   "scripts": {
