@@ -19,6 +19,10 @@ class GithubSearchCount extends React.PureComponent {
     this.fetchData();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timeout);
+  }
+
   async fetchData() {
     const { authKey, query } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
@@ -37,6 +41,8 @@ class GithubSearchCount extends React.PureComponent {
       });
     } catch (error) {
       this.setState({ loading: false, error: true });
+    } finally {
+      this.timeout = setInterval(() => this.fetchData(), this.props.interval);
     }
   }
 
