@@ -42,10 +42,15 @@ class GithubSearchCount extends React.PureComponent {
 
   render() {
     const { count, loading, error } = this.state;
-    const { title } = this.props;
+    const { title, urlToOpen } = this.props;
 
     return (
-      <Widget loading={loading} error={error} title={title}>
+      <Widget
+        loading={loading}
+        error={error}
+        title={title}
+        urlToOpen={urlToOpen}
+      >
         <Counter value={count.toLocaleString()} />
       </Widget>
     );

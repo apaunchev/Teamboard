@@ -17,7 +17,20 @@ const Title = styled.h1`
   font-weight: 400;
 `;
 
-export default ({ children, error = false, loading = false, title = "" }) => {
+const Link = styled.a`
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: ${props => props.theme.palette.textColor};
+`;
+
+export default ({
+  children,
+  error = false,
+  loading = false,
+  title = "",
+  urlToOpen
+}) => {
   let content;
 
   if (loading) {
@@ -30,8 +43,10 @@ export default ({ children, error = false, loading = false, title = "" }) => {
 
   return (
     <Container>
-      {title ? <Title>{title}</Title> : null}
-      {content}
+      <Link href={urlToOpen}>
+        {title ? <Title>{title}</Title> : null}
+        {content}
+      </Link>
     </Container>
   );
 };
