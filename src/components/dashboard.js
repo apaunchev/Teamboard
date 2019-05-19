@@ -21,9 +21,9 @@ const Container = styled.main`
   color: ${props => props.theme.palette.textColor};
 `;
 
-export default ({ children, theme }) => (
+export default ({ children, theme, style }) => (
   <ThemeProvider theme={theme}>
-    <Container>
+    <Container style={style}>
       {children}
       <GlobalStyle />
     </Container>
