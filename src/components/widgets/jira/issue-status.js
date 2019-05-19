@@ -31,15 +31,32 @@ export default class JiraIssueStatus extends React.Component {
     clearInterval(this.interval);
   }
 
-  fetchInformation = async () => {
+  async fetchInformation() {
     const { authKey, url, query } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
+    const endpoint = `${url}/rest/api/3/search?jql=${query}`;
 
     try {
-      const res = await fetch(`${url}/rest/api/3/search?jql=${query}`, opts);
+      const res = await fetch(endpoint, opts);
       const json = await res.json();
       const total = json.total;
-      const statusMap = json.issues
+      let issues = json.issues;
+      let totalReceived = issues.length;
+      if (totalReceived < total) {
+        let paginate = true;
+        while (paginate) {
+          const paginatedResults = await fetch(
+            endpoint + `&startAt=${totalReceived}`,
+            opts
+          );
+          const paginatedJson = await paginatedResults.json();
+          issues = [...issues, ...paginatedJson.issues];
+          totalReceived += issues.length;
+          paginate = totalReceived < total;
+        }
+      }
+
+      const statusMap = issues
         .map(issue => issue.fields)
         .reduce(
           (acc, issue) => {
@@ -59,7 +76,7 @@ export default class JiraIssueStatus extends React.Component {
     } catch (error) {
       this.setState({ error: true, loading: false });
     }
-  };
+  }
 
   render() {
     const { total, statusMap, error, loading } = this.state;
