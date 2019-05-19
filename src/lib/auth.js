@@ -7,7 +7,7 @@ export const basicAuthHeader = key => {
   if (credentials) {
     return {
       Authorization: `Basic ${Base64.encode(
-        `${credentials.username}:${credentials.password}`
+        `${credentials.username}:${credentials.token}`
       )}`
     };
   }
