@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { modularScale } from "polished";
 
 const Counter = styled.div`
-  font-size: ${modularScale(5)};
-  font-weight: 500;
   color: ${props => props.theme.palette.accentColor};
+  font-size: ${modularScale(4)};
+  font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
 `;

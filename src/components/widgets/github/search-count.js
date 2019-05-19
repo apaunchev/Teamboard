@@ -16,14 +16,18 @@ class GithubSearchCount extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchInformation();
+    this.interval = setInterval(
+      () => this.fetchInformation(),
+      this.props.interval
+    );
   }
 
   componentWillUnmount() {
-    clearInterval(this.timeout);
+    clearInterval(this.interval);
   }
 
-  async fetchData() {
+  async fetchInformation() {
     const { authKey, query } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
 
@@ -35,29 +39,22 @@ class GithubSearchCount extends React.PureComponent {
       const json = await res.json();
 
       this.setState({
-        count: json.total_count || 0,
+        count: json.total_count,
         loading: false,
         error: false
       });
     } catch (error) {
       this.setState({ loading: false, error: true });
-    } finally {
-      this.timeout = setInterval(() => this.fetchData(), this.props.interval);
     }
   }
 
   render() {
     const { count, loading, error } = this.state;
-    const { title, urlToOpen } = this.props;
+    const { title, onClick } = this.props;
 
     return (
-      <Widget
-        loading={loading}
-        error={error}
-        title={title}
-        urlToOpen={urlToOpen}
-      >
-        <Counter value={count.toLocaleString()} />
+      <Widget loading={loading} error={error} title={title} onClick={onClick}>
+        <Counter value={count} />
       </Widget>
     );
   }

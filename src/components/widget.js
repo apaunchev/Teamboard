@@ -1,27 +1,41 @@
 import React from "react";
 import styled from "styled-components";
-import { size, modularScale } from "polished";
+import { modularScale } from "polished";
 
 const Container = styled.div`
-  ${size("20em")}
+  position: relative;
   display: flex;
   flex-direction: column;
-  margin: 1em;
+  align-items: center;
+  justify-content: center;
   padding: 1em;
   background-color: ${props => props.theme.palette.canvasColor};
-  border: 1px solid ${props => props.theme.palette.borderColor};
+  transition: all 0.3s ease;
+  text-align: center;
+
+  :hover {
+    background-color: hsla(0, 0%, 100%, 0.05);
+  }
 `;
 
 const Title = styled.h1`
-  font-size: ${modularScale(2)};
-  font-weight: 400;
+  color: ${props => props.theme.palette.textColor};
+  font-family: system-ui;
+  font-size: ${modularScale(0)};
+  font-weight: 300;
+  letter-spacing: 6px;
+  text-align: center;
+  text-transform: uppercase;
 `;
 
 const Link = styled.a`
-  display: block;
-  height: 100%;
-  text-decoration: none;
+  display block;
   color: ${props => props.theme.palette.textColor};
+  text-decoration: none;
+`;
+
+const Content = styled.div`
+  width: 100%;
 `;
 
 export default ({
@@ -29,7 +43,7 @@ export default ({
   error = false,
   loading = false,
   title = "",
-  urlToOpen
+  onClick
 }) => {
   let content;
 
@@ -43,9 +57,9 @@ export default ({
 
   return (
     <Container>
-      <Link href={urlToOpen}>
+      <Link href={onClick}>
         {title ? <Title>{title}</Title> : null}
-        {content}
+        <Content>{content}</Content>
       </Link>
     </Container>
   );

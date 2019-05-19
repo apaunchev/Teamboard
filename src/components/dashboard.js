@@ -12,13 +12,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Container = styled.main`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  min-height: calc(100vh - 2em);
-  padding: 1em;
+  display: grid;
+  grid: 1fr 1fr 1fr / 1fr 1fr 1fr;
+  grid-gap: 1vh;
+  padding: 1vh;
+  min-height: calc(100vh - 2vh);
   background-color: ${props => props.theme.palette.backgroundColor};
   color: ${props => props.theme.palette.textColor};
 `;

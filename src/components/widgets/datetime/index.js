@@ -4,17 +4,17 @@ import styled from "styled-components";
 import { modularScale } from "polished";
 import moment from "moment-timezone";
 
-const TimeItem = styled.div`
-  font-size: ${modularScale(5)};
-`;
-
-const DateItem = styled.div`
-  font-size: ${modularScale(2)};
+const Time = styled.div`
+  color: ${props => props.theme.palette.accentColor};
+  font-size: ${modularScale(4)};
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 class DateTime extends React.PureComponent {
   static defaultProps = {
-    interval: 1000
+    interval: 1000 * 10
   };
 
   state = {
@@ -38,8 +38,7 @@ class DateTime extends React.PureComponent {
 
     return (
       <Widget title={title}>
-        <TimeItem>{date.tz(timezone).format("LT")}</TimeItem>
-        <DateItem>{date.tz(timezone).format("LL")}</DateItem>
+        <Time>{date.tz(timezone).format("LT")}</Time>
       </Widget>
     );
   }
