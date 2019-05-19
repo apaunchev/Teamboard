@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
 
 const Container = styled.main`
   display: grid;
-  grid: 1fr 1fr 1fr / 1fr 1fr 1fr;
+  grid: repeat(3, 1fr) / repeat(3, 1fr);
   grid-gap: 1vh;
   padding: 1vh;
   min-height: calc(100vh - 2vh);
