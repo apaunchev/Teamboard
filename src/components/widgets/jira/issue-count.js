@@ -1,6 +1,7 @@
 import React from "react";
 import fetch from "unfetch";
 import { basicAuthHeader } from "../../../lib/auth";
+import BarChart from "../../bar-chart";
 import Counter from "../../counter";
 import Widget from "../../widget";
 
@@ -11,7 +12,8 @@ export default class JiraIssueCount extends React.Component {
   };
 
   state = {
-    count: 0,
+    total: 0,
+    groupsMap: [],
     error: false,
     loading: true
   };
@@ -29,26 +31,59 @@ export default class JiraIssueCount extends React.Component {
   }
 
   async fetchInformation() {
-    const { authKey, url, query } = this.props;
+    const { authKey, url, query, groupBy, groups } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
+    const endpoint = `${url}/rest/api/3/search?jql=${query}`;
 
     try {
-      const res = await fetch(`${url}/rest/api/3/search?jql=${query}`, opts);
+      const res = await fetch(endpoint, opts);
       const json = await res.json();
+      const total = json.total;
+      let issues = json.issues;
+      let groupsMap;
 
-      this.setState({ count: json.total, error: false, loading: false });
+      if (groupBy) {
+        // if we are grouping issues, then we need to paginate through all of them
+        let totalReceived = issues.length;
+        if (totalReceived < total) {
+          let paginate = true;
+          while (paginate) {
+            const paginatedResults = await fetch(
+              endpoint + `&startAt=${totalReceived}`,
+              opts
+            );
+            const paginatedJson = await paginatedResults.json();
+            issues = [...issues, ...paginatedJson.issues];
+            totalReceived += issues.length;
+            paginate = totalReceived < total;
+          }
+        }
+
+        groupsMap = issues
+          .map(issue => issue.fields)
+          .reduce((acc, issue) => {
+            const key = groupBy(issue);
+            const index = acc.findIndex(s => s.name === key);
+            if (index > -1) acc[index].value = acc[index].value + 1;
+            return acc;
+          }, groups);
+      }
+
+      this.setState({ total, groupsMap, error: false, loading: false });
     } catch (error) {
       this.setState({ error: true, loading: false });
     }
   }
 
   render() {
-    const { count, error, loading } = this.state;
-    const { title } = this.props;
-
+    const { total, groupsMap, error, loading } = this.state;
+    const { title, groupBy, onClick } = this.props;
     return (
-      <Widget title={title} loading={loading} error={error}>
-        <Counter value={count} />
+      <Widget loading={loading} error={error} title={title} onClick={onClick}>
+        <Counter value={total} />
+        {typeof groupBy === "function" && (
+          <BarChart data={groupsMap} total={total} />
+        )}
       </Widget>
     );
   }
