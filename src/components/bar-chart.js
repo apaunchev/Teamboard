@@ -4,7 +4,8 @@ import styled from "styled-components";
 const BarChart = styled.div`
   display: flex;
   margin: 1em auto;
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
 `;
 
 const BarChartBlock = styled.div`
