@@ -53,7 +53,7 @@ export default ({
   } else if (error) {
     content = <div className="Error">{error}</div>;
   } else {
-    content = <div>{children}</div>;
+    content = <>{children}</>;
   }
 
   return (
