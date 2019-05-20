@@ -30,6 +30,7 @@ const Title = styled.h1`
 
 const Link = styled.a`
   display block;
+  width: 100%;
   color: ${props => props.theme.palette.textColor};
   text-decoration: none;
 `;

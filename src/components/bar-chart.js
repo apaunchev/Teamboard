@@ -2,15 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 const BarChart = styled.div`
-  position: absolute;
-  right: 20%;
-  bottom: 0;
-  left: 20%;
+  display: flex;
+  margin: 1em auto;
+  width: 300px;
 `;
 
 const BarChartBlock = styled.div`
-  position: relative;
-  float: left;
   display: flex;
   flex-direction: column;
 `;
