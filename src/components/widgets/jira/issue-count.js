@@ -54,7 +54,7 @@ export default class JiraIssueCount extends React.Component {
             );
             const paginatedJson = await paginatedResults.json();
             issues = [...issues, ...paginatedJson.issues];
-            totalReceived += issues.length;
+            totalReceived += paginatedJson.issues.length;
             paginate = totalReceived < total;
           }
         }
