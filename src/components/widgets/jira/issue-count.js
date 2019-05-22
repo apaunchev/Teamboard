@@ -31,14 +31,15 @@ export default class JiraIssueCount extends React.Component {
   }
 
   async fetchInformation() {
-    const { authKey, url, query, groupBy, groups } = this.props;
+    const { authKey, url, query, groupBy, groups, countBy } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
     const endpoint = `${url}/rest/api/3/search?jql=${query}`;
 
     try {
       const res = await fetch(endpoint, opts);
       const json = await res.json();
-      const total = json.total;
+      let countByEnabled = typeof countBy === "function";
+      let total = json.total;
       let issues = json.issues;
       let groupsMap;
 
@@ -63,10 +64,15 @@ export default class JiraIssueCount extends React.Component {
           .map(issue => issue.fields)
           .reduce((acc, issue) => {
             const key = groupBy(issue);
+            const incrementer = countByEnabled ? parseInt(countBy(issue)) : 1;
             const index = acc.findIndex(s => s.name === key);
-            if (index > -1) acc[index].value = acc[index].value + 1;
+            if (index > -1) acc[index].value += incrementer;
             return acc;
           }, groups);
+
+        if (countByEnabled) {
+          total = groupsMap.reduce((acc, group) => (acc += group.value), 0);
+        }
       }
 
       this.setState({ total, groupsMap, error: false, loading: false });
