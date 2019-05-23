@@ -84,6 +84,7 @@ export default class JiraIssueCount extends React.Component {
   render() {
     const { total, groupsMap, error, loading } = this.state;
     const { title, groupBy, onClick } = this.props;
+
     return (
       <Widget loading={loading} error={error} title={title} onClick={onClick}>
         <Counter value={total} />
