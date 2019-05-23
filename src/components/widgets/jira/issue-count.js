@@ -38,7 +38,7 @@ export default class JiraIssueCount extends React.Component {
     try {
       const res = await fetch(endpoint, opts);
       const json = await res.json();
-      let countByEnabled = typeof countBy === "function";
+      const countByEnabled = typeof countBy === "function";
       let total = json.total;
       let issues = json.issues;
       let groupsMap;
