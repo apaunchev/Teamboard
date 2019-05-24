@@ -31,7 +31,8 @@ export default class JiraIssueCount extends React.Component {
   }
 
   async fetchInformation() {
-    const { authKey, url, query, groupBy, groups, countBy } = this.props;
+    const { authKey, url, query, groupBy, countBy } = this.props;
+    let { groups } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
     const endpoint = `${url}/rest/api/3/search?jql=${query}`;
 
@@ -59,6 +60,8 @@ export default class JiraIssueCount extends React.Component {
             paginate = totalReceived < total;
           }
         }
+
+        groups = groups.map(g => ({ ...g, value: 0 }));
 
         groupsMap = issues
           .map(issue => issue.fields)
