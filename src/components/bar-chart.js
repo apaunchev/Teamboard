@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
-const BarChart = styled.div`
+const Container = styled.div`
   display: flex;
   margin: 1em auto;
   width: 100%;
@@ -20,8 +21,8 @@ const BarChartValue = styled.span`
   text-shadow: 1px 1px 1px black;
 `;
 
-export default ({ data, total }) => (
-  <BarChart>
+const BarChart = ({ data, total }) => (
+  <Container>
     {data.map(({ name, color, value }) => (
       <BarChartBlock
         key={name}
@@ -34,5 +35,18 @@ export default ({ data, total }) => (
         <BarChartValue>{value}</BarChartValue>
       </BarChartBlock>
     ))}
-  </BarChart>
+  </Container>
 );
+
+BarChart.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired
+    })
+  ).isRequired,
+  total: PropTypes.number.isRequired
+};
+
+export default BarChart;

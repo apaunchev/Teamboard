@@ -1,12 +1,13 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { modularScale } from "polished";
+import PropTypes from "prop-types";
 
 const ARROW_UP = "↑";
 const ARROW_DOWN = "↓";
 const ARROW_LINE = "–";
 
-const Counter = styled.div`
+const Container = styled.div`
   font-size: ${modularScale(4)};
   font-weight: 700;
   overflow: hidden;
@@ -68,9 +69,20 @@ const renderHistoryArrow = ({ data, direction }) => {
   return "";
 };
 
-export default ({ value, history, title = "" }) => (
-  <Counter>
+const Counter = ({ value, history, title = "" }) => (
+  <Container>
     <span title={title}>{value}</span>
     {history && history.data.length ? renderHistoryArrow(history) : null}
-  </Counter>
+  </Container>
 );
+
+Counter.propTypes = {
+  title: PropTypes.string,
+  value: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    direction: PropTypes.oneOf(["up", "down"]).isRequired
+  })
+};
+
+export default Counter;

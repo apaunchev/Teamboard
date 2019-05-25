@@ -1,10 +1,11 @@
+import PropTypes from "prop-types";
 import React from "react";
 import fetch from "unfetch";
-import { basicAuthHeader } from "../../../lib/auth";
-import Widget from "../../widget";
-import Counter from "../../counter";
 import { db } from "../../../db";
 import aggregate from "../../../lib/aggregate";
+import { basicAuthHeader } from "../../../lib/auth";
+import Counter from "../../counter";
+import Widget from "../../widget";
 
 class GithubSearchCount extends React.PureComponent {
   static defaultProps = {
@@ -93,5 +94,16 @@ class GithubSearchCount extends React.PureComponent {
     );
   }
 }
+
+GithubSearchCount.propTypes = {
+  id: PropTypes.string,
+  interval: PropTypes.number,
+  title: PropTypes.string,
+  authKey: PropTypes.string.isRequired,
+  query: PropTypes.string.isRequired,
+  onClick: PropTypes.string,
+  trackHistory: PropTypes.bool,
+  trendDirection: PropTypes.string
+};
 
 export default GithubSearchCount;

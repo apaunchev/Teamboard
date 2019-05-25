@@ -1,10 +1,11 @@
+import PropTypes from "prop-types";
 import React from "react";
 import fetch from "unfetch";
 import { basicAuthHeader } from "../../../lib/auth";
 import Counter from "../../counter";
 import Widget from "../../widget";
 
-export default class JiraSprintDaysRemaining extends React.Component {
+class JiraSprintDaysRemaining extends React.Component {
   static defaultProps = {
     interval: 1000 * 60 * 60,
     title: "Sprint days remaining"
@@ -68,3 +69,13 @@ export default class JiraSprintDaysRemaining extends React.Component {
     );
   }
 }
+
+JiraSprintDaysRemaining.propTypes = {
+  interval: PropTypes.number.isRequired,
+  title: PropTypes.string,
+  authKey: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  boardId: PropTypes.number.isRequired
+};
+
+export default JiraSprintDaysRemaining;

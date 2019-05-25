@@ -1,13 +1,14 @@
+import PropTypes from "prop-types";
 import React from "react";
 import fetch from "unfetch";
+import { db } from "../../../db";
+import aggregate from "../../../lib/aggregate";
 import { basicAuthHeader } from "../../../lib/auth";
 import BarChart from "../../bar-chart";
 import Counter from "../../counter";
 import Widget from "../../widget";
-import { db } from "../../../db";
-import aggregate from "../../../lib/aggregate";
 
-export default class JiraIssueCount extends React.Component {
+class JiraIssueCount extends React.Component {
   static defaultProps = {
     interval: 1000 * 60 * 60,
     title: "Jira issue count",
@@ -158,3 +159,26 @@ export default class JiraIssueCount extends React.Component {
     );
   }
 }
+
+JiraIssueCount.propTypes = {
+  id: PropTypes.string,
+  interval: PropTypes.number,
+  title: PropTypes.string,
+  authKey: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  query: PropTypes.string.isRequired,
+  onClick: PropTypes.string,
+  trackHistory: PropTypes.bool,
+  trendDirection: PropTypes.string,
+  groupBy: PropTypes.func,
+  groups: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired
+    })
+  ),
+  countBy: PropTypes.func
+};
+
+export default JiraIssueCount;

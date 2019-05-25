@@ -1,8 +1,9 @@
-import React from "react";
-import Widget from "../../widget";
-import styled from "styled-components";
-import { modularScale } from "polished";
 import moment from "moment-timezone";
+import { modularScale } from "polished";
+import PropTypes from "prop-types";
+import React from "react";
+import styled from "styled-components";
+import Widget from "../../widget";
 
 const Time = styled.div`
   color: ${props => props.theme.palette.accentColor};
@@ -12,9 +13,11 @@ const Time = styled.div`
   text-overflow: ellipsis;
 `;
 
-class DateTime extends React.PureComponent {
+class LocalTime extends React.PureComponent {
   static defaultProps = {
-    interval: 1000 * 10
+    title: "Local time",
+    interval: 1000 * 10,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
   };
 
   state = {
@@ -37,11 +40,17 @@ class DateTime extends React.PureComponent {
     const { timezone, title } = this.props;
 
     return (
-      <Widget title={title}>
+      <Widget title={title} loading={false} error={false}>
         <Time>{date.tz(timezone).format("LT")}</Time>
       </Widget>
     );
   }
 }
 
-export default DateTime;
+LocalTime.propTypes = {
+  title: PropTypes.string,
+  interval: PropTypes.number,
+  timezone: PropTypes.string
+};
+
+export default LocalTime;

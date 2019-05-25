@@ -1,6 +1,7 @@
-import React from "react";
-import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { normalize } from "polished";
+import PropTypes from "prop-types";
+import React from "react";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   ${normalize()}
@@ -21,7 +22,7 @@ const Container = styled.main`
   color: ${props => props.theme.palette.textColor};
 `;
 
-export default ({ children, theme, style }) => (
+const Dashboard = ({ children, theme, style }) => (
   <ThemeProvider theme={theme}>
     <Container style={style}>
       {children}
@@ -29,3 +30,10 @@ export default ({ children, theme, style }) => (
     </Container>
   </ThemeProvider>
 );
+
+Dashboard.propTypes = {
+  theme: PropTypes.object.isRequired,
+  style: PropTypes.object
+};
+
+export default Dashboard;

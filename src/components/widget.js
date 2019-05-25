@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { modularScale } from "polished";
+import PropTypes from "prop-types";
 
 const Container = styled.div`
   position: relative;
@@ -39,7 +40,7 @@ const Content = styled.div`
   width: 100%;
 `;
 
-export default ({
+const Widget = ({
   children,
   error = false,
   loading = false,
@@ -65,3 +66,12 @@ export default ({
     </Container>
   );
 };
+
+Widget.propTypes = {
+  title: PropTypes.string,
+  onClick: PropTypes.string,
+  error: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired
+};
+
+export default Widget;
