@@ -12,6 +12,7 @@ export default class JiraSprintDaysRemaining extends React.Component {
 
   state = {
     days: 0,
+    endDate: null,
     error: false,
     loading: true
   };
@@ -47,20 +48,22 @@ export default class JiraSprintDaysRemaining extends React.Component {
         opts
       );
       const json = await res.json();
-      const days = this.calculateDays(json.values[0].endDate);
+      const endDate = json.values[0].endDate;
+      const days = this.calculateDays(endDate);
 
-      this.setState({ days, error: false, loading: false });
+      this.setState({ days, endDate, error: false, loading: false });
     } catch (error) {
       this.setState({ error: true, loading: false });
     }
   }
 
   render() {
-    const { days, error, loading } = this.state;
+    const { days, endDate, error, loading } = this.state;
     const { title } = this.props;
+
     return (
       <Widget title={title} loading={loading} error={error}>
-        <Counter value={days} />
+        <Counter value={days} title={endDate} />
       </Widget>
     );
   }
