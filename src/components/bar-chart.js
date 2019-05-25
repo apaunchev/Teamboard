@@ -11,6 +11,7 @@ const BarChart = styled.div`
 const BarChartBlock = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 20px;
 `;
 
 const BarChartValue = styled.span`
