@@ -4,15 +4,19 @@ import { basicAuthHeader } from "../../../lib/auth";
 import BarChart from "../../bar-chart";
 import Counter from "../../counter";
 import Widget from "../../widget";
+import { db } from "../../../db";
+import aggregate from "../../../lib/aggregate";
 
 export default class JiraIssueCount extends React.Component {
   static defaultProps = {
     interval: 1000 * 60 * 60,
     title: "Jira issue count",
+    trackHistory: false,
+    trendDirection: "down"
   };
 
   state = {
-    total: 0,
+    count: 0,
     groupsMap: [],
     error: false,
     loading: true
@@ -31,7 +35,15 @@ export default class JiraIssueCount extends React.Component {
   }
 
   async fetchInformation() {
-    const { authKey, url, query, groupBy, countBy } = this.props;
+    const {
+      id,
+      authKey,
+      url,
+      query,
+      groupBy,
+      countBy,
+      trackHistory
+    } = this.props;
     let { groups } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
     const endpoint = `${url}/rest/api/3/search?jql=${query}`;
@@ -40,14 +52,15 @@ export default class JiraIssueCount extends React.Component {
       const res = await fetch(endpoint, opts);
       const json = await res.json();
       const countByEnabled = typeof countBy === "function";
-      let total = json.total;
+      let count = json.total;
       let issues = json.issues;
       let groupsMap;
 
+      // group by field
       if (groupBy) {
-        // if we are grouping issues, then we need to paginate through all of them
+        // paginated requests
         let totalReceived = issues.length;
-        if (totalReceived < total) {
+        if (totalReceived < count) {
           let paginate = true;
           while (paginate) {
             const paginatedResults = await fetch(
@@ -57,7 +70,7 @@ export default class JiraIssueCount extends React.Component {
             const paginatedJson = await paginatedResults.json();
             issues = [...issues, ...paginatedJson.issues];
             totalReceived += paginatedJson.issues.length;
-            paginate = totalReceived < total;
+            paginate = totalReceived < count;
           }
         }
 
@@ -74,25 +87,72 @@ export default class JiraIssueCount extends React.Component {
           }, groups);
 
         if (countByEnabled) {
-          total = groupsMap.reduce((acc, group) => (acc += group.value), 0);
+          count = groupsMap.reduce((acc, group) => (acc += group.value), 0);
         }
       }
 
-      this.setState({ total, groupsMap, error: false, loading: false });
+      if (trackHistory) {
+        if (!id) {
+          console.warn(
+            "[search-count] unable to track history, missing widget id"
+          );
+          return;
+        }
+
+        if (!db.has(id).value()) {
+          db.set(id, []).write();
+        }
+
+        db.get(id)
+          .push({ date: Date.now(), count })
+          .write();
+      }
+
+      this.setState({ count, groupsMap, error: false, loading: false });
     } catch (error) {
       this.setState({ error: true, loading: false });
     }
   }
 
   render() {
-    const { total, groupsMap, error, loading } = this.state;
-    const { title, groupBy, onClick } = this.props;
+    const { count, groupsMap, error, loading } = this.state;
+    const {
+      id,
+      title,
+      groupBy,
+      onClick,
+      trackHistory,
+      trendDirection
+    } = this.props;
+    const groupByEnabled = typeof groupBy === "function";
 
     return (
       <Widget loading={loading} error={error} title={title} onClick={onClick}>
-        <Counter value={total} />
-        {typeof groupBy === "function" && (
-          <BarChart data={groupsMap} total={total} />
+        {trackHistory ? (
+          <>
+            <Counter
+              value={count}
+              history={{
+                data: aggregate(
+                  db
+                    .get(id)
+                    .orderBy("date", "desc")
+                    .value()
+                ),
+                direction: trendDirection
+              }}
+            />
+            {groupByEnabled ? (
+              <BarChart data={groupsMap} total={count} />
+            ) : null}
+          </>
+        ) : (
+          <>
+            <Counter value={count} />
+            {groupByEnabled ? (
+              <BarChart data={groupsMap} total={count} />
+            ) : null}
+          </>
         )}
       </Widget>
     );

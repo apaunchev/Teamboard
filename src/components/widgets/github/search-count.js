@@ -3,11 +3,15 @@ import fetch from "unfetch";
 import { basicAuthHeader } from "../../../lib/auth";
 import Widget from "../../widget";
 import Counter from "../../counter";
+import { db } from "../../../db";
+import aggregate from "../../../lib/aggregate";
 
 class GithubSearchCount extends React.PureComponent {
   static defaultProps = {
     interval: 1000 * 60 * 60,
     title: "GitHub search count",
+    trackHistory: false,
+    trendDirection: "down"
   };
 
   state = {
@@ -29,7 +33,7 @@ class GithubSearchCount extends React.PureComponent {
   }
 
   async fetchInformation() {
-    const { authKey, query } = this.props;
+    const { id, authKey, query, trackHistory } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
 
     try {
@@ -38,12 +42,26 @@ class GithubSearchCount extends React.PureComponent {
         opts
       );
       const json = await res.json();
+      const count = json.total_count;
 
-      this.setState({
-        count: json.total_count,
-        loading: false,
-        error: false
-      });
+      if (trackHistory) {
+        if (!id) {
+          console.warn(
+            "[search-count] unable to track history, missing widget id"
+          );
+          return;
+        }
+
+        if (!db.has(id).value()) {
+          db.set(id, []).write();
+        }
+
+        db.get(id)
+          .push({ date: Date.now(), count })
+          .write();
+      }
+
+      this.setState({ count, loading: false, error: false });
     } catch (error) {
       this.setState({ loading: false, error: true });
     }
@@ -51,11 +69,26 @@ class GithubSearchCount extends React.PureComponent {
 
   render() {
     const { count, loading, error } = this.state;
-    const { title, onClick } = this.props;
+    const { id, title, onClick, trackHistory, trendDirection } = this.props;
 
     return (
       <Widget loading={loading} error={error} title={title} onClick={onClick}>
-        <Counter value={count} />
+        {trackHistory ? (
+          <Counter
+            value={count}
+            history={{
+              data: aggregate(
+                db
+                  .get(id)
+                  .orderBy("date", "desc")
+                  .value()
+              ),
+              direction: trendDirection
+            }}
+          />
+        ) : (
+          <Counter value={count} />
+        )}
       </Widget>
     );
   }
