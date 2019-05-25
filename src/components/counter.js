@@ -17,7 +17,7 @@ const Container = styled.div`
 const Arrow = styled.small`
   padding-left: 0.25rem;
   font-size: 70%;
-  color: ${props => props.theme.palette.mutedTextColor};
+  color: ${props => props.theme.palette.textColor};
 
   ${props =>
     props.red &&
