@@ -2,6 +2,8 @@ import { modularScale, transparentize } from "polished";
 import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
+import ErrorIcon from "./error-icon";
+import LoadingIndicator from "./loading-indicator";
 
 const Container = styled.div`
   position: relative;
@@ -55,9 +57,9 @@ const Widget = ({
   let content;
 
   if (loading) {
-    content = <div className="Loading">Loading...</div>;
+    content = <LoadingIndicator />;
   } else if (error) {
-    content = <div className="Error">{error}</div>;
+    content = <ErrorIcon />;
   } else {
     content = <>{children}</>;
   }
