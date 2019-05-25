@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "js-base64": "^2.4.9",
+    "lowdb": "^1.0.0",
     "moment-timezone": "^0.5.23",
     "polished": "^2.3.1",
     "react": "^16.6.3",
