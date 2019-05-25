@@ -13,8 +13,11 @@ const Container = styled.div`
   transition: all 0.3s ease;
   text-align: center;
 
-  :hover {
-    background-color: hsla(0, 0%, 100%, 0.05);
+  :hover,
+  :focus {
+    background-color: ${props =>
+      transparentize(0.95, props.theme.palette.textColor)};
+    outline: none;
   }
 `;
 
@@ -57,7 +60,7 @@ const Widget = ({
   }
 
   return (
-    <Container>
+    <Container tabIndex="0">
       <Link href={onClick}>
         {title ? <Title>{title}</Title> : null}
         <Content>{content}</Content>
