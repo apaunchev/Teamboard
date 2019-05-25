@@ -18,7 +18,7 @@ const BarChartBlock = styled.div`
 const BarChartValue = styled.span`
   color: ${props => props.theme.palette.textColor};
   font-weight: 700;
-  text-shadow: 1px 1px 1px black;
+  line-height: 1.25;
 `;
 
 const BarChart = ({ data, total }) => (

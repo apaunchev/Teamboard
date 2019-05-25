@@ -10,6 +10,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1em;
+  border-radius: 4px;
   transition: all 0.3s ease;
   text-align: center;
 
