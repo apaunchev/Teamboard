@@ -6,7 +6,8 @@ import Counter from "../../counter";
 
 class GithubSearchCount extends React.PureComponent {
   static defaultProps = {
-    interval: 1000 * 60 * 5
+    interval: 1000 * 60 * 60,
+    title: "GitHub search count",
   };
 
   state = {

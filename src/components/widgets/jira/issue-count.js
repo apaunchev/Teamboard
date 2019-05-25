@@ -7,8 +7,8 @@ import Widget from "../../widget";
 
 export default class JiraIssueCount extends React.Component {
   static defaultProps = {
-    interval: 1000 * 60 * 5,
-    title: "Issue count"
+    interval: 1000 * 60 * 60,
+    title: "Jira issue count",
   };
 
   state = {
