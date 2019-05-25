@@ -22,13 +22,13 @@ const Arrow = styled.small`
   ${props =>
     props.red &&
     css`
-      color: ${props => props.theme.palette.redColor};
+      color: ${props => props.theme.palette.l1Color};
     `}
 
   ${props =>
     props.green &&
     css`
-      color: ${props => props.theme.palette.greenColor};
+      color: ${props => props.theme.palette.l4Color};
     `}
 `;
 

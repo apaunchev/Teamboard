@@ -1,7 +1,7 @@
+import { modularScale, transparentize } from "polished";
+import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
-import { modularScale } from "polished";
-import PropTypes from "prop-types";
 
 const Container = styled.div`
   position: relative;
@@ -10,7 +10,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1em;
-  background-color: ${props => props.theme.palette.canvasColor};
   transition: all 0.3s ease;
   text-align: center;
 

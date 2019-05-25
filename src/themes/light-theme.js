@@ -1,6 +1,6 @@
 const colors = {
-  black: "#121212",
-  white: "#fff",
+  black: "#212121",
+  white: "#fafafa",
   grey: "#c3c3c3",
   green: "#45B29D",
   yellow: "#EFC94C",
@@ -10,8 +10,8 @@ const colors = {
 
 export default {
   palette: {
-    backgroundColor: colors.black,
-    textColor: colors.white,
+    backgroundColor: colors.white,
+    textColor: colors.black,
     mutedTextColor: colors.grey,
     l1Color: colors.red,
     l2Color: colors.orange,

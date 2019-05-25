@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Widget from "../../widget";
 
 const Time = styled.div`
-  color: ${props => props.theme.palette.accentColor};
+  color: ${props => props.theme.palette.textColor};
   font-size: ${modularScale(4)};
   font-weight: 700;
   overflow: hidden;
