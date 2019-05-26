@@ -43,26 +43,28 @@ const renderHistoryArrow = ({ data, direction }) => {
     return "";
   }
 
-  const count0 = data[0].count;
-  const count1 = data[1].count;
+  if (data.length > 1) {
+    const count0 = data[0].count;
+    const count1 = data[1].count;
 
-  if (direction === "up") {
-    if (count0 > count1) {
-      return <Arrow green>{ARROW_UP}</Arrow>;
-    } else if (count0 < count1) {
-      return <Arrow red>{ARROW_DOWN}</Arrow>;
-    } else {
-      return <Arrow>{ARROW_LINE}</Arrow>;
+    if (direction === "up") {
+      if (count0 > count1) {
+        return <Arrow green>{ARROW_UP}</Arrow>;
+      } else if (count0 < count1) {
+        return <Arrow red>{ARROW_DOWN}</Arrow>;
+      } else {
+        return <Arrow>{ARROW_LINE}</Arrow>;
+      }
     }
-  }
 
-  if (direction === "down") {
-    if (count0 > count1) {
-      return <Arrow red>{ARROW_UP}</Arrow>;
-    } else if (count0 < count1) {
-      return <Arrow green>{ARROW_DOWN}</Arrow>;
-    } else {
-      return <Arrow>{ARROW_LINE}</Arrow>;
+    if (direction === "down") {
+      if (count0 > count1) {
+        return <Arrow red>{ARROW_UP}</Arrow>;
+      } else if (count0 < count1) {
+        return <Arrow green>{ARROW_DOWN}</Arrow>;
+      } else {
+        return <Arrow>{ARROW_LINE}</Arrow>;
+      }
     }
   }
 
