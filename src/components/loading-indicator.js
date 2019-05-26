@@ -31,7 +31,6 @@ const Svg = styled.svg`
   animation: ${rotation} 1.4s linear infinite;
   height: ${props => props.size};
   width: ${props => props.size};
-  margin: 1em 0;
 `;
 
 const Circle = styled.circle`

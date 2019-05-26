@@ -25,7 +25,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  margin: 1em 0;
+  margin: 0 0 1em;
   color: ${props => props.theme.palette.textColor};
   font-family: system-ui;
   font-size: ${modularScale(0)};
@@ -44,7 +44,6 @@ const Link = styled.a`
 
 const Content = styled.div`
   width: 100%;
-  margin: 1em 0;
 `;
 
 const Widget = ({
