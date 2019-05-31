@@ -1,8 +1,8 @@
+import moment from "moment";
 import PropTypes from "prop-types";
 import React from "react";
 import fetch from "unfetch";
 import { db } from "../../../db";
-import aggregate from "../../../lib/aggregate";
 import { basicAuthHeader } from "../../../lib/auth";
 import Counter from "../../counter";
 import Widget from "../../widget";
@@ -11,8 +11,8 @@ class GithubSearchCount extends React.PureComponent {
   static defaultProps = {
     interval: 1000 * 60 * 60,
     title: "GitHub search count",
-    trackHistory: false,
-    trendDirection: "down"
+    trendEnabled: true,
+    trendDirection: "upwards"
   };
 
   state = {
@@ -34,7 +34,7 @@ class GithubSearchCount extends React.PureComponent {
   }
 
   async fetchInformation() {
-    const { id, authKey, query, trackHistory } = this.props;
+    const { id, authKey, query } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
 
     try {
@@ -45,20 +45,24 @@ class GithubSearchCount extends React.PureComponent {
       const json = await res.json();
       const count = json.total_count;
 
-      if (trackHistory) {
-        if (!id) {
-          console.warn(
-            "[search-count] unable to track history, missing widget id"
-          );
-          return;
-        }
+      if (!id) {
+        console.warn("[search-count] unable to track trend, missing widget id");
+        return;
+      }
 
-        if (!db.has(id).value()) {
-          db.set(id, []).write();
-        }
+      if (!db.has(id).value()) {
+        db.set(id, []).write();
+      }
 
+      const today = moment().format("YYYY-MM-DD");
+      if (
+        !db
+          .get(id)
+          .find(point => point.date === today)
+          .value()
+      ) {
         db.get(id)
-          .push({ date: Date.now(), count })
+          .push({ date: today, value: count })
           .write();
       }
 
@@ -70,26 +74,20 @@ class GithubSearchCount extends React.PureComponent {
 
   render() {
     const { count, loading, error } = this.state;
-    const { id, title, onClick, trackHistory, trendDirection } = this.props;
+    const { id, title, trendEnabled, trendDirection } = this.props;
+    const history = db
+      .get(id)
+      .orderBy("date", "desc")
+      .value();
 
     return (
-      <Widget loading={loading} error={error} title={title} onClick={onClick}>
-        {trackHistory ? (
-          <Counter
-            value={count}
-            history={{
-              data: aggregate(
-                db
-                  .get(id)
-                  .orderBy("date", "desc")
-                  .value()
-              ),
-              direction: trendDirection
-            }}
-          />
-        ) : (
-          <Counter value={count} />
-        )}
+      <Widget loading={loading} error={error} title={title}>
+        <Counter
+          value={count}
+          history={history}
+          trendEnabled={trendEnabled}
+          trendDirection={trendDirection}
+        />
       </Widget>
     );
   }
@@ -101,9 +99,8 @@ GithubSearchCount.propTypes = {
   title: PropTypes.string,
   authKey: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
-  onClick: PropTypes.string,
-  trackHistory: PropTypes.bool,
-  trendDirection: PropTypes.string
+  trendEnabled: PropTypes.bool,
+  trendDirection: PropTypes.oneOf(["upwards", "downwards"])
 };
 
 export default GithubSearchCount;

@@ -35,24 +35,11 @@ const Title = styled.h1`
   text-transform: uppercase;
 `;
 
-const Link = styled.a`
-  display block;
-  width: 100%;
-  color: ${props => props.theme.palette.textColor};
-  text-decoration: none;
-`;
-
 const Content = styled.div`
   width: 100%;
 `;
 
-const Widget = ({
-  children,
-  error = false,
-  loading = false,
-  title = "",
-  onClick
-}) => {
+const Widget = ({ children, error = false, loading = false, title = "" }) => {
   let content;
 
   if (loading) {
@@ -64,18 +51,15 @@ const Widget = ({
   }
 
   return (
-    <Container tabIndex="0">
-      <Link href={onClick}>
-        {title ? <Title>{title}</Title> : null}
-        <Content>{content}</Content>
-      </Link>
+    <Container>
+      {title ? <Title>{title}</Title> : null}
+      <Content>{content}</Content>
     </Container>
   );
 };
 
 Widget.propTypes = {
   title: PropTypes.string,
-  onClick: PropTypes.string,
   error: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired
 };

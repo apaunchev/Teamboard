@@ -1,11 +1,11 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { modularScale } from "polished";
 import PropTypes from "prop-types";
+import Trend from "react-trend";
 
-const ARROW_UP = "↑";
-const ARROW_DOWN = "↓";
-const ARROW_LINE = "–";
+const TREND_UPWARDS_COLORS = ["#DF5A49", "#EFC94C", "#45B29D"];
+const TREND_DOWNWARDS_COLORS = ["#45B29D", "#EFC94C", "#DF5A49"];
 
 const Container = styled.div`
   font-size: ${modularScale(4)};
@@ -14,77 +14,36 @@ const Container = styled.div`
   text-overflow: ellipsis;
 `;
 
-const Arrow = styled.small`
-  padding-left: 0.25rem;
-  font-size: 70%;
-  color: ${props => props.theme.palette.textColor};
-
-  ${props =>
-    props.red &&
-    css`
-      color: ${props => props.theme.palette.l1Color};
-    `}
-
-  ${props =>
-    props.green &&
-    css`
-      color: ${props => props.theme.palette.l4Color};
-    `}
-`;
-
-const renderHistoryArrow = ({ data, direction }) => {
-  if (!data.length) {
-    console.warn("[counter] data is empty");
-    return "";
-  }
-
-  if (direction && (direction !== "up" && direction !== "down")) {
-    console.warn("[counter] direction is invalid");
-    return "";
-  }
-
-  if (data.length > 1) {
-    const count0 = data[0].count;
-    const count1 = data[1].count;
-
-    if (direction === "up") {
-      if (count0 > count1) {
-        return <Arrow green>{ARROW_UP}</Arrow>;
-      } else if (count0 < count1) {
-        return <Arrow red>{ARROW_DOWN}</Arrow>;
-      } else {
-        return <Arrow>{ARROW_LINE}</Arrow>;
-      }
-    }
-
-    if (direction === "down") {
-      if (count0 > count1) {
-        return <Arrow red>{ARROW_UP}</Arrow>;
-      } else if (count0 < count1) {
-        return <Arrow green>{ARROW_DOWN}</Arrow>;
-      } else {
-        return <Arrow>{ARROW_LINE}</Arrow>;
-      }
-    }
-  }
-
-  return "";
-};
-
-const Counter = ({ value, history, title = "" }) => (
-  <Container>
-    <span title={title}>{value}</span>
-    {history && history.data.length ? renderHistoryArrow(history) : null}
+const Counter = ({ title, value, history, trendEnabled, trendDirection }) => (
+  <Container title={title}>
+    {value}
+    {trendEnabled ? (
+      <Trend
+        data={history}
+        strokeWidth={2}
+        smooth
+        gradient={
+          trendDirection === "upwards"
+            ? TREND_UPWARDS_COLORS
+            : TREND_DOWNWARDS_COLORS
+        }
+        style={{ position: "absolute", right: 0, bottom: 0, left: 0 }}
+      />
+    ) : null}
   </Container>
 );
 
 Counter.propTypes = {
   title: PropTypes.string,
   value: PropTypes.number.isRequired,
-  history: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.object).isRequired,
-    direction: PropTypes.oneOf(["up", "down"]).isRequired
-  })
+  history: PropTypes.arrayOf(
+    PropTypes.shape({
+      date: PropTypes.string,
+      value: PropTypes.number
+    })
+  ),
+  trendEnabled: PropTypes.bool,
+  trendDirection: PropTypes.oneOf(["upwards", "downwards"])
 };
 
 export default Counter;
