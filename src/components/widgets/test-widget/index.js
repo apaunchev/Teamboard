@@ -9,7 +9,11 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const TestWidget = () => {
+const TestWidget = ({
+  title = "Test Widget",
+  trendEnabled,
+  trendDirection
+}) => {
   const history = [...new Array(45)]
     .map((point, index) => ({
       date: moment()
@@ -19,13 +23,15 @@ const TestWidget = () => {
     }))
     .slice(0, 30);
 
+  console.log("[test-widget] history", history);
+
   return (
-    <Widget loading={false} error={false} title={"Test Widget"}>
+    <Widget loading={false} error={false} title={title}>
       <Counter
         value={history[history.length - 1].value}
         history={history}
-        trendEnabled={true}
-        trendDirection={"downwards"}
+        trendEnabled={trendEnabled}
+        trendDirection={trendDirection}
       />
     </Widget>
   );
