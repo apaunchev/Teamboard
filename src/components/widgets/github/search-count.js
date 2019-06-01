@@ -77,7 +77,8 @@ class GithubSearchCount extends React.PureComponent {
     const { id, title, trendEnabled, trendDirection } = this.props;
     const history = db
       .get(id)
-      .orderBy("date", "desc")
+      .orderBy("date", "asc")
+      .take(30)
       .value();
 
     return (
