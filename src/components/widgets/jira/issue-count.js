@@ -53,14 +53,21 @@ class JiraIssueCount extends React.Component {
       }
 
       const today = moment().format("YYYY-MM-DD");
-      if (
-        !db
+      const isTodayCaptured = db
+        .get(id)
+        .find({ date: today })
+        .value();
+
+      if (!isTodayCaptured) {
+        db
           .get(id)
-          .find(point => point.date === today)
-          .value()
-      ) {
-        db.get(id)
           .push({ date: today, value: count })
+          .write();
+      } else {
+        db
+          .get(id)
+          .find({ date: today })
+          .assign({ value: count })
           .write();
       }
 
