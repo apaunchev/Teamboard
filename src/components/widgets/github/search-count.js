@@ -45,25 +45,24 @@ class GithubSearchCount extends React.PureComponent {
       const json = await res.json();
       const count = json.total_count;
 
-      if (!id) {
+      if (id) {
+        if (!db.has(id).value()) {
+          db.set(id, []).write();
+        }
+
+        const today = moment().format("YYYY-MM-DD");
+        if (
+          !db
+            .get(id)
+            .find(point => point.date === today)
+            .value()
+        ) {
+          db.get(id)
+            .push({ date: today, value: count })
+            .write();
+        }
+      } else {
         console.warn("[search-count] unable to track trend, missing widget id");
-        return;
-      }
-
-      if (!db.has(id).value()) {
-        db.set(id, []).write();
-      }
-
-      const today = moment().format("YYYY-MM-DD");
-      if (
-        !db
-          .get(id)
-          .find(point => point.date === today)
-          .value()
-      ) {
-        db.get(id)
-          .push({ date: today, value: count })
-          .write();
       }
 
       this.setState({ count, loading: false, error: false });

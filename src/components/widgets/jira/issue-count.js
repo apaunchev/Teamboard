@@ -6,6 +6,7 @@ import { db } from "../../../db";
 import { basicAuthHeader } from "../../../lib/auth";
 import Counter from "../../counter";
 import Widget from "../../widget";
+import BarChart from "../../bar-chart";
 
 class JiraIssueCount extends React.Component {
   static defaultProps = {
@@ -17,6 +18,7 @@ class JiraIssueCount extends React.Component {
 
   state = {
     count: 0,
+    groupsMap: [],
     error: false,
     loading: true
   };
@@ -34,52 +36,90 @@ class JiraIssueCount extends React.Component {
   }
 
   async fetchInformation() {
-    const { id, authKey, url, query } = this.props;
+    const { id, authKey, url, query, groupBy, countBy } = this.props;
+    let { groups } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
     const endpoint = `${url}/rest/api/3/search?jql=${query}`;
 
     try {
       const res = await fetch(endpoint, opts);
       const json = await res.json();
-      const count = json.total;
+      const groupByEnabled = typeof groupBy === "function";
+      const countByEnabled = typeof countBy === "function";
+      let count = json.total;
+      let issues = json.issues;
+      let groupsMap;
 
-      if (!id) {
-        console.warn("[search-count] unable to track trend, missing widget id");
-        return;
+      // group by field
+      if (groupByEnabled) {
+        // paginated requests
+        let totalReceived = issues.length;
+        if (totalReceived < count) {
+          let paginate = true;
+          while (paginate) {
+            const paginatedResults = await fetch(
+              endpoint + `&startAt=${totalReceived}`,
+              opts
+            );
+            const paginatedJson = await paginatedResults.json();
+            issues = [...issues, ...paginatedJson.issues];
+            totalReceived += paginatedJson.issues.length;
+            paginate = totalReceived < count;
+          }
+        }
+
+        groups = groups.map(g => ({ ...g, value: 0 }));
+
+        groupsMap = issues
+          .map(issue => issue.fields)
+          .reduce((acc, issue) => {
+            const key = groupBy(issue);
+            const incrementer = countByEnabled ? parseInt(countBy(issue)) : 1;
+            const index = acc.findIndex(s => s.name === key);
+            if (index > -1) acc[index].value += incrementer;
+            return acc;
+          }, groups);
+
+        if (countByEnabled) {
+          count = groupsMap.reduce((acc, group) => (acc += group.value), 0);
+        }
       }
 
-      if (!db.has(id).value()) {
-        db.set(id, []).write();
-      }
+      if (id) {
+        if (!db.has(id).value()) {
+          db.set(id, []).write();
+        }
 
-      const today = moment().format("YYYY-MM-DD");
-      const isTodayCaptured = db
-        .get(id)
-        .find({ date: today })
-        .value();
-
-      if (!isTodayCaptured) {
-        db
-          .get(id)
-          .push({ date: today, value: count })
-          .write();
-      } else {
-        db
+        const today = moment().format("YYYY-MM-DD");
+        const isTodayCaptured = db
           .get(id)
           .find({ date: today })
-          .assign({ value: count })
-          .write();
+          .value();
+
+        if (!isTodayCaptured) {
+          db.get(id)
+            .push({ date: today, value: count })
+            .write();
+        } else {
+          db.get(id)
+            .find({ date: today })
+            .assign({ value: count })
+            .write();
+        }
+      } else {
+        console.warn("[issue-count] unable to track trend, missing widget id");
       }
 
-      this.setState({ count, error: false, loading: false });
+      this.setState({ count, groupsMap, error: false, loading: false });
     } catch (error) {
       this.setState({ error: true, loading: false });
     }
   }
 
   render() {
-    const { count, error, loading } = this.state;
-    const { id, title, trendEnabled, trendDirection } = this.props;
+    const { count, groupsMap, error, loading } = this.state;
+    const { id, title, trendEnabled, trendDirection, groupBy } = this.props;
+    const groupByEnabled = typeof groupBy === "function";
     const history = db
       .get(id)
       .orderBy("date", "asc")
@@ -94,6 +134,7 @@ class JiraIssueCount extends React.Component {
           trendEnabled={trendEnabled}
           trendDirection={trendDirection}
         />
+        {groupByEnabled ? <BarChart data={groupsMap} total={count} /> : null}
       </Widget>
     );
   }
@@ -107,7 +148,16 @@ JiraIssueCount.propTypes = {
   url: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
   trendEnabled: PropTypes.bool,
-  trendDirection: PropTypes.oneOf(["upwards", "downwards"])
+  trendDirection: PropTypes.oneOf(["upwards", "downwards"]),
+  groupBy: PropTypes.func,
+  groups: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired
+    })
+  ),
+  countBy: PropTypes.func
 };
 
 export default JiraIssueCount;
