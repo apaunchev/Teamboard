@@ -9,11 +9,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const TestWidget = ({
-  title = "Test Widget",
-  trendEnabled,
-  trendDirection
-}) => {
+const TestWidget = ({ title = "Test Widget", showGraph, graphColors }) => {
   const history = [...new Array(45)]
     .map((point, index) => ({
       date: moment()
@@ -30,8 +26,8 @@ const TestWidget = ({
       <Counter
         value={history[history.length - 1].value}
         history={history}
-        trendEnabled={trendEnabled}
-        trendDirection={trendDirection}
+        showGraph={showGraph}
+        graphColors={graphColors}
       />
     </Widget>
   );

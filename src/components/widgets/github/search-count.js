@@ -11,8 +11,7 @@ class GithubSearchCount extends React.PureComponent {
   static defaultProps = {
     interval: 1000 * 60 * 60,
     title: "GitHub search count",
-    trendEnabled: true,
-    trendDirection: "upwards"
+    showGraph: true
   };
 
   state = {
@@ -73,7 +72,7 @@ class GithubSearchCount extends React.PureComponent {
 
   render() {
     const { count, loading, error } = this.state;
-    const { id, title, trendEnabled, trendDirection } = this.props;
+    const { id, title, showGraph, graphColors } = this.props;
     const history = db
       .get(id)
       .orderBy("date", "asc")
@@ -85,8 +84,8 @@ class GithubSearchCount extends React.PureComponent {
         <Counter
           value={count}
           history={history}
-          trendEnabled={trendEnabled}
-          trendDirection={trendDirection}
+          showGraph={showGraph}
+          graphColors={graphColors}
         />
       </Widget>
     );
@@ -99,8 +98,8 @@ GithubSearchCount.propTypes = {
   title: PropTypes.string,
   authKey: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
-  trendEnabled: PropTypes.bool,
-  trendDirection: PropTypes.oneOf(["upwards", "downwards"])
+  showGraph: PropTypes.bool,
+  graphColors: PropTypes.arrayOf(PropTypes.string)
 };
 
 export default GithubSearchCount;

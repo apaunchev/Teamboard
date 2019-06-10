@@ -12,8 +12,7 @@ class JiraIssueCount extends React.Component {
   static defaultProps = {
     interval: 1000 * 60 * 60,
     title: "Jira issue count",
-    trendEnabled: true,
-    trendDirection: "upwards"
+    showGraph: true
   };
 
   state = {
@@ -118,7 +117,7 @@ class JiraIssueCount extends React.Component {
 
   render() {
     const { count, groupsMap, error, loading } = this.state;
-    const { id, title, trendEnabled, trendDirection, groupBy } = this.props;
+    const { id, title, groupBy, showGraph, graphColors } = this.props;
     const groupByEnabled = typeof groupBy === "function";
     const history = db
       .get(id)
@@ -131,8 +130,8 @@ class JiraIssueCount extends React.Component {
         <Counter
           value={count}
           history={history}
-          trendEnabled={trendEnabled}
-          trendDirection={trendDirection}
+          showGraph={showGraph}
+          graphColors={graphColors}
         />
         {groupByEnabled ? <BarChart data={groupsMap} total={count} /> : null}
       </Widget>
@@ -147,8 +146,7 @@ JiraIssueCount.propTypes = {
   authKey: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
-  trendEnabled: PropTypes.bool,
-  trendDirection: PropTypes.oneOf(["upwards", "downwards"]),
+  showGraph: PropTypes.bool,
   groupBy: PropTypes.func,
   groups: PropTypes.arrayOf(
     PropTypes.shape({
