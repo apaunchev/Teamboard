@@ -7,7 +7,7 @@ const Container = styled.div`
   margin-left: auto;
   margin-right: auto;
   right: 0;
-  bottom: 10px;
+  bottom: 8px;
   left: 0;
   display: flex;
   max-width: 320px;
