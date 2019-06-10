@@ -106,7 +106,7 @@ class JiraIssueCount extends React.Component {
             .write();
         }
       } else {
-        console.warn("[issue-count] unable to track trend, missing widget id");
+        console.warn("[issue-count] unable to save history, missing widget id");
       }
 
       this.setState({ count, groupsMap, error: false, loading: false });

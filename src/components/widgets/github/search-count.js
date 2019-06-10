@@ -61,7 +61,9 @@ class GithubSearchCount extends React.PureComponent {
             .write();
         }
       } else {
-        console.warn("[search-count] unable to track trend, missing widget id");
+        console.warn(
+          "[search-count] unable to save history, missing widget id"
+        );
       }
 
       this.setState({ count, loading: false, error: false });
