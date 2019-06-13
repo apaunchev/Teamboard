@@ -1,8 +1,10 @@
+import moment from "moment";
 import PropTypes from "prop-types";
 import React from "react";
 import fetch from "unfetch";
 import { basicAuthHeader } from "../../../lib/auth";
 import Counter from "../../counter";
+import ProgressBar from "../../ui/progress-bar";
 import Widget from "../../widget";
 
 class JiraSprintDaysRemaining extends React.Component {
@@ -14,6 +16,7 @@ class JiraSprintDaysRemaining extends React.Component {
   state = {
     days: 0,
     endDate: null,
+    percentCompleted: 0,
     error: false,
     loading: true
   };
@@ -39,6 +42,14 @@ class JiraSprintDaysRemaining extends React.Component {
     return diffDays < 0 ? 0 : diffDays;
   }
 
+  calculatePercentCompleted(startDate, endDate) {
+    const now = moment();
+    const start = moment(startDate, "YYYY-MM-DDTHH:mm:ss.SSSSZ");
+    const end = moment(endDate, "YYYY-MM-DDTHH:mm:ss.SSSSZ");
+
+    return ((now - start) / (end - start)) * 100;
+  }
+
   async fetchInformation() {
     const { authKey, boardId, url } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
@@ -49,22 +60,46 @@ class JiraSprintDaysRemaining extends React.Component {
         opts
       );
       const json = await res.json();
-      const endDate = json.values[0].endDate;
+      const { startDate, endDate } = json.values[0];
       const days = this.calculateDays(endDate);
+      const percentCompleted = this.calculatePercentCompleted(
+        startDate,
+        endDate
+      );
 
-      this.setState({ days, endDate, error: false, loading: false });
+      this.setState({
+        days,
+        startDate,
+        endDate,
+        percentCompleted,
+        error: false,
+        loading: false
+      });
     } catch (error) {
       this.setState({ error: true, loading: false });
     }
   }
 
   render() {
-    const { days, endDate, error, loading } = this.state;
+    const {
+      days,
+      startDate,
+      endDate,
+      percentCompleted,
+      error,
+      loading
+    } = this.state;
     const { title } = this.props;
 
     return (
       <Widget title={title} loading={loading} error={error}>
-        <Counter value={days} title={endDate} />
+        <Counter
+          value={days}
+          title={`Started ${moment(startDate).format("LLL")}, ends ${moment(
+            endDate
+          ).format("LLL")}`}
+        />
+        <ProgressBar value={percentCompleted} />
       </Widget>
     );
   }
