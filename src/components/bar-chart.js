@@ -4,13 +4,10 @@ import PropTypes from "prop-types";
 
 const Container = styled.div`
   position: absolute;
-  margin-left: auto;
-  margin-right: auto;
   right: 0;
-  bottom: 8px;
+  bottom: 0;
   left: 0;
   display: flex;
-  max-width: 320px;
 `;
 
 const BarChartBlock = styled.div`
