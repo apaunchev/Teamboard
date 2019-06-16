@@ -93,13 +93,13 @@ class JiraSprintDaysRemaining extends React.Component {
 
     return (
       <Widget title={title} loading={loading} error={error}>
-        <Counter
-          value={days}
+        <Counter value={days} />
+        <ProgressBar
+          value={percentCompleted}
           title={`Started ${moment(startDate).format("LLL")}, ends ${moment(
             endDate
           ).format("LLL")}`}
         />
-        <ProgressBar value={percentCompleted} />
       </Widget>
     );
   }
