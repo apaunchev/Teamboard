@@ -6,7 +6,7 @@ import { db } from "../../../db";
 import { basicAuthHeader } from "../../../lib/auth";
 import Counter from "../../counter";
 import Widget from "../../widget";
-import BarChart from "../../bar-chart";
+import StackedBarChart from "../../ui/stacked-bar-chart";
 
 class JiraIssueCount extends React.Component {
   static defaultProps = {
@@ -127,13 +127,16 @@ class JiraIssueCount extends React.Component {
 
     return (
       <Widget loading={loading} error={error} title={title}>
-        <Counter
-          value={count}
-          history={history}
-          showGraph={showGraph}
-          graphColors={graphColors}
-        />
-        {groupByEnabled ? <BarChart data={groupsMap} total={count} /> : null}
+        {groupByEnabled ? (
+          <StackedBarChart data={groupsMap} total={count} />
+        ) : (
+          <Counter
+            value={count}
+            history={history}
+            showGraph={showGraph}
+            graphColors={graphColors}
+          />
+        )}
       </Widget>
     );
   }
