@@ -5,8 +5,9 @@ import PropTypes from "prop-types";
 import Trend from "react-trend";
 
 const Container = styled.div`
-  font-size: ${modularScale(4)};
-  font-weight: 700;
+  color: ${props => props.theme.palette.textColor};
+  font-size: ${modularScale(5)};
+  font-weight: 400;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
