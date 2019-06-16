@@ -6,11 +6,16 @@ import styled from "styled-components";
 import Widget from "../../widget";
 
 const Time = styled.div`
+  margin-bottom: 10px;
   color: ${props => props.theme.palette.textColor};
-  font-size: ${modularScale(4)};
-  font-weight: 700;
+  font-size: ${modularScale(5)};
+  font-weight: 400;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+const Date = styled.div`
+  font-size: ${modularScale(1)};
 `;
 
 class LocalTime extends React.PureComponent {
@@ -42,6 +47,7 @@ class LocalTime extends React.PureComponent {
     return (
       <Widget title={title} loading={false} error={false}>
         <Time>{date.tz(timezone).format("LT")}</Time>
+        <Date>{date.tz(timezone).format("LL")}</Date>
       </Widget>
     );
   }
