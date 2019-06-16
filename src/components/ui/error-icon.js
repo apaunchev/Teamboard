@@ -4,7 +4,7 @@ import { size } from "polished";
 
 const Svg = styled.svg`
   ${size("5em")}
-  fill: ${props => props.theme.palette.l1Color};
+  fill: ${props => props.theme.palette.errorIcon};
   margin: 1em 0;
 `;
 

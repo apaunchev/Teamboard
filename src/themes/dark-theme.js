@@ -17,6 +17,7 @@ export default {
     l3Color: colors.yellow,
     l4Color: colors.green,
     progressBar1: colors.blue,
-    progressBar2: colors.green
+    progressBar2: colors.green,
+    errorIcon: colors.red
   }
 };

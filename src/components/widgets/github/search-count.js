@@ -4,8 +4,9 @@ import React from "react";
 import fetch from "unfetch";
 import { db } from "../../../db";
 import { basicAuthHeader } from "../../../lib/auth";
-import Counter from "../../counter";
-import Widget from "../../widget";
+import Widget from "../../ui/widget";
+import Counter from "../../ui/counter";
+import CounterWithHistory from "../../ui/counter-with-history";
 
 class GithubSearchCount extends React.PureComponent {
   static defaultProps = {
@@ -74,21 +75,28 @@ class GithubSearchCount extends React.PureComponent {
 
   render() {
     const { count, loading, error } = this.state;
-    const { id, title, showGraph, graphColors } = this.props;
+    const { id, title, inverseTrend = false } = this.props;
     const history = db
       .get(id)
       .orderBy("date", "asc")
       .take(30)
       .value();
 
+    if (history.length > 1) {
+      return (
+        <Widget loading={loading} error={error} title={title}>
+          <CounterWithHistory
+            value={count}
+            history={history}
+            inverseTrend={inverseTrend}
+          />
+        </Widget>
+      );
+    }
+
     return (
       <Widget loading={loading} error={error} title={title}>
-        <Counter
-          value={count}
-          history={history}
-          showGraph={showGraph}
-          graphColors={graphColors}
-        />
+        <Counter value={count} />
       </Widget>
     );
   }
@@ -100,8 +108,7 @@ GithubSearchCount.propTypes = {
   title: PropTypes.string,
   authKey: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
-  showGraph: PropTypes.bool,
-  graphColors: PropTypes.arrayOf(PropTypes.string)
+  inverseTrend: PropTypes.bool
 };
 
 export default GithubSearchCount;

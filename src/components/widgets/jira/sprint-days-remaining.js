@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import fetch from "unfetch";
 import { basicAuthHeader } from "../../../lib/auth";
-import Counter from "../../counter";
+import Counter from "../../ui/counter";
 import ProgressBar from "../../ui/progress-bar";
-import Widget from "../../widget";
+import Widget from "../../ui/widget";
 
 class JiraSprintDaysRemaining extends React.Component {
   static defaultProps = {

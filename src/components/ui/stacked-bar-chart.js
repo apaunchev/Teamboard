@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -27,7 +27,6 @@ const DataTable = styled.table`
 const DataRow = styled.tr`
   padding: 15px 0;
   vertical-align: center;
-  text-align: left;
 `;
 
 const DataItemValue = styled.td`

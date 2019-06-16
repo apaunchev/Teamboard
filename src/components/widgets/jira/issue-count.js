@@ -4,9 +4,10 @@ import React from "react";
 import fetch from "unfetch";
 import { db } from "../../../db";
 import { basicAuthHeader } from "../../../lib/auth";
-import Counter from "../../counter";
-import Widget from "../../widget";
+import Widget from "../../ui/widget";
 import StackedBarChart from "../../ui/stacked-bar-chart";
+import Counter from "../../ui/counter";
+import CounterWithHistory from "../../ui/counter-with-history";
 
 class JiraIssueCount extends React.Component {
   static defaultProps = {
@@ -117,7 +118,7 @@ class JiraIssueCount extends React.Component {
 
   render() {
     const { count, groupsMap, error, loading } = this.state;
-    const { id, title, groupBy, showGraph, graphColors } = this.props;
+    const { id, title, groupBy, inverseTrend } = this.props;
     const groupByEnabled = typeof groupBy === "function";
     const history = db
       .get(id)
@@ -125,18 +126,29 @@ class JiraIssueCount extends React.Component {
       .take(30)
       .value();
 
-    return (
-      <Widget loading={loading} error={error} title={title}>
-        {groupByEnabled ? (
+    if (groupByEnabled) {
+      return (
+        <Widget loading={loading} error={error} title={title}>
           <StackedBarChart data={groupsMap} total={count} />
-        ) : (
-          <Counter
+        </Widget>
+      );
+    }
+
+    if (history.length > 1) {
+      return (
+        <Widget loading={loading} error={error} title={title}>
+          <CounterWithHistory
             value={count}
             history={history}
-            showGraph={showGraph}
-            graphColors={graphColors}
+            inverseTrend={inverseTrend}
           />
-        )}
+        </Widget>
+      );
+    }
+
+    return (
+      <Widget loading={loading} error={error} title={title}>
+        <Counter value={count} />
       </Widget>
     );
   }
@@ -149,7 +161,6 @@ JiraIssueCount.propTypes = {
   authKey: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
-  showGraph: PropTypes.bool,
   groupBy: PropTypes.func,
   groups: PropTypes.arrayOf(
     PropTypes.shape({
@@ -158,7 +169,8 @@ JiraIssueCount.propTypes = {
       value: PropTypes.number.isRequired
     })
   ),
-  countBy: PropTypes.func
+  countBy: PropTypes.func,
+  inverseTrend: PropTypes.bool
 };
 
 export default JiraIssueCount;

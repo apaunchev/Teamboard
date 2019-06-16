@@ -7,19 +7,20 @@ const GlobalStyle = createGlobalStyle`
   ${normalize()}
 
   html {
+    background-color: ${props => props.theme.palette.backgroundColor};
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
       Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   }
 `;
 
 const Container = styled.main`
-  display: grid;
-  grid: repeat(3, 1fr) / repeat(3, 1fr);
-  grid-gap: 1vh;
-  padding: 1vh;
-  min-height: calc(100vh - 2vh);
   background-color: ${props => props.theme.palette.backgroundColor};
   color: ${props => props.theme.palette.textColor};
+  min-height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: center;
 `;
 
 const Dashboard = ({ children, theme, style }) => (
