@@ -1,6 +1,7 @@
 import { modularScale } from "polished";
 import PropTypes from "prop-types";
 import React from "react";
+import Trend from "react-trend";
 import styled from "styled-components";
 import Counter from "./counter";
 
@@ -49,7 +50,12 @@ const getColor = (percentChange, inverseTrend) => {
   return color;
 };
 
-const CounterWithHistory = ({ value, history, inverseTrend = false }) => {
+const CounterWithHistory = ({
+  value,
+  history,
+  showTrend = true,
+  inverseTrend = false
+}) => {
   const percentChange = getPercentChange(history);
   const symbol = getSymbol(percentChange);
   const color = getColor(percentChange, inverseTrend);
@@ -64,6 +70,13 @@ const CounterWithHistory = ({ value, history, inverseTrend = false }) => {
         {Math.abs(percentChange)}
         <small style={{ fontSize: "24px" }}>%</small>
       </PercentChange>
+      {showTrend ? (
+        <Trend
+          data={history}
+          stroke={"#3eb4fa"}
+          style={{ position: "absolute", right: 0, bottom: 30, left: 0 }}
+        />
+      ) : null}
     </Counter>
   );
 };
@@ -76,6 +89,7 @@ CounterWithHistory.propTypes = {
       value: PropTypes.number
     })
   ),
+  showTrend: PropTypes.bool,
   inverseTrend: PropTypes.bool
 };
 
