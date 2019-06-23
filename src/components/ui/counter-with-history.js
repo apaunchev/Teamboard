@@ -22,16 +22,13 @@ const getPercentChange = data => {
 const getSymbol = percentChange => {
   const UPWARDS_CHAR = "▲";
   const DOWNWARDS_CHAR = "▼";
-  const LEVEL_CHAR = "⎻";
-  
+
   if (percentChange > 0) {
     return UPWARDS_CHAR;
-  }
-  else if (percentChange < 0) {
+  } else if (percentChange < 0) {
     return DOWNWARDS_CHAR;
-  }
-  else {
-    return LEVEL_CHAR;
+  } else {
+    return "";
   }
 };
 
