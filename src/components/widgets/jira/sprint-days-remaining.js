@@ -46,8 +46,9 @@ class JiraSprintDaysRemaining extends React.Component {
     const now = moment();
     const start = moment(startDate, "YYYY-MM-DDTHH:mm:ss.SSSSZ");
     const end = moment(endDate, "YYYY-MM-DDTHH:mm:ss.SSSSZ");
+    const calc = ((now - start) / (end - start)) * 100;
 
-    return ((now - start) / (end - start)) * 100;
+    return calc <= 100 ? calc : 100;
   }
 
   async fetchInformation() {
