@@ -11,8 +11,7 @@ import CounterWithHistory from "../../ui/counter-with-history";
 class GithubSearchCount extends React.PureComponent {
   static defaultProps = {
     interval: 1000 * 60 * 60,
-    title: "GitHub search count",
-    showGraph: true
+    title: "GitHub search count"
   };
 
   state = {

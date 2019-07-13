@@ -12,8 +12,7 @@ import CounterWithHistory from "../../ui/counter-with-history";
 class JiraIssueCount extends React.Component {
   static defaultProps = {
     interval: 1000 * 60 * 60,
-    title: "Jira issue count",
-    showGraph: true
+    title: "Jira issue count"
   };
 
   state = {
