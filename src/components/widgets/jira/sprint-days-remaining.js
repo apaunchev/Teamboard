@@ -1,4 +1,9 @@
-import moment from "moment";
+import {
+  parseISO,
+  differenceInCalendarDays,
+  differenceInBusinessDays,
+  format
+} from "date-fns";
 import PropTypes from "prop-types";
 import React from "react";
 import fetch from "unfetch";
@@ -10,7 +15,8 @@ import Widget from "../../ui/widget";
 class JiraSprintDaysRemaining extends React.Component {
   static defaultProps = {
     interval: 1000 * 60 * 60,
-    title: "Sprint days remaining"
+    title: "Sprint days remaining",
+    useBusinessDays: true
   };
 
   state = {
@@ -33,26 +39,8 @@ class JiraSprintDaysRemaining extends React.Component {
     clearInterval(this.interval);
   }
 
-  calculateDays(date) {
-    const currentDate = new Date();
-    const endDate = new Date(date);
-    const timeDiff = endDate.getTime() - currentDate.getTime();
-    const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-    return diffDays < 0 ? 0 : diffDays;
-  }
-
-  calculatePercentCompleted(startDate, endDate) {
-    const now = moment();
-    const start = moment(startDate, "YYYY-MM-DDTHH:mm:ss.SSSSZ");
-    const end = moment(endDate, "YYYY-MM-DDTHH:mm:ss.SSSSZ");
-    const calc = ((now - start) / (end - start)) * 100;
-
-    return calc <= 100 ? calc : 100;
-  }
-
   async fetchInformation() {
-    const { authKey, boardId, url } = this.props;
+    const { authKey, boardId, url, useBusinessDays } = this.props;
     const opts = authKey ? { headers: basicAuthHeader(authKey) } : {};
 
     try {
@@ -61,17 +49,22 @@ class JiraSprintDaysRemaining extends React.Component {
         opts
       );
       const json = await res.json();
-      const { startDate, endDate } = json.values[0];
-      const days = this.calculateDays(endDate);
-      const percentCompleted = this.calculatePercentCompleted(
-        startDate,
-        endDate
+      const startDate = parseISO(json.values[0].startDate);
+      const endDate = parseISO(json.values[0].endDate);
+      const now = new Date();
+      const difference = useBusinessDays
+        ? differenceInBusinessDays(now, endDate)
+        : differenceInCalendarDays(now, endDate);
+      const days = Math.max(0, Math.abs(difference));
+      const percentCompleted = Math.min(
+        100,
+        ((now - startDate) / (endDate - startDate)) * 100
       );
 
       this.setState({
-        days,
         startDate,
         endDate,
+        days,
         percentCompleted,
         error: false,
         loading: false
@@ -97,9 +90,9 @@ class JiraSprintDaysRemaining extends React.Component {
         <Counter value={days} />
         <ProgressBar
           value={percentCompleted}
-          title={`Started ${moment(startDate).format("LLL")}, ends ${moment(
-            endDate
-          ).format("LLL")}`}
+          title={`Started ${startDate &&
+            format(startDate, "PP")}, expected to end ${endDate &&
+            format(endDate, "PP")}`}
         />
       </Widget>
     );
@@ -111,7 +104,8 @@ JiraSprintDaysRemaining.propTypes = {
   title: PropTypes.string,
   authKey: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
-  boardId: PropTypes.number.isRequired
+  boardId: PropTypes.number.isRequired,
+  useBusinessDays: PropTypes.bool
 };
 
 export default JiraSprintDaysRemaining;

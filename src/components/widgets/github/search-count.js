@@ -1,4 +1,4 @@
-import moment from "moment";
+import { lightFormat } from "date-fns";
 import PropTypes from "prop-types";
 import React from "react";
 import fetch from "unfetch";
@@ -49,7 +49,7 @@ class GithubSearchCount extends React.PureComponent {
           db.set(id, []).write();
         }
 
-        const today = moment().format("YYYY-MM-DD");
+        const today = lightFormat(new Date(), "yyyy-MM-dd");
         if (
           !db
             .get(id)
