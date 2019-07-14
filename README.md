@@ -22,7 +22,7 @@ Built on top of [React](https://reactjs.org/), [lowdb](https://github.com/typico
 ```javascript
 import LocalTime from "../components/widgets/local-time";
 
-<LocalTime title="Costa Rica" timeZone="America/Costa_Rica" />;
+<LocalTime title="Costa Rica" timeZone="America/Costa_Rica" />
 ```
 
 #### Props
@@ -44,7 +44,7 @@ import GithubSearchCount from "../components/widgets/github/search-count";
   title="Open pull requests"
   authKey="github"
   query="org:facebook is:pr is:open"
-/>;
+/>
 ```
 
 #### Props
@@ -76,7 +76,7 @@ import JiraIssueCount from "../components/widgets/jira/issue-count";
     { name: "Done", color: "green", value: 0 }
   ]}
   countBy={issue => issue.story_points}
-/>;
+/>
 ```
 
 #### Props
@@ -105,7 +105,7 @@ import JiraSprintDaysRemaining from "../components/widgets/jira/sprint-days-rema
   authKey="jira"
   url="https://my-company.atlassian.net"
   boardId={42}
-/>;
+/>
 ```
 
 #### Props
