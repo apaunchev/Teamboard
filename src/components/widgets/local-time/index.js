@@ -22,7 +22,8 @@ class LocalTime extends React.PureComponent {
   static defaultProps = {
     title: "Local time",
     interval: 1000 * 10,
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    showDate: true
   };
 
   state = {
@@ -42,16 +43,18 @@ class LocalTime extends React.PureComponent {
 
   render() {
     const { date } = this.state;
-    const { timeZone, title } = this.props;
+    const { timeZone, title, showDate } = this.props;
 
     return (
       <Widget title={title} loading={false} error={false}>
         <StyledTime>
           {format(utcToZonedTime(date, timeZone), "p", { timeZone })}
         </StyledTime>
-        <StyledDate>
-          {format(utcToZonedTime(date, timeZone), "PP", { timeZone })}
-        </StyledDate>
+        {showDate ? (
+          <StyledDate>
+            {format(utcToZonedTime(date, timeZone), "PP", { timeZone })}
+          </StyledDate>
+        ) : null}
       </Widget>
     );
   }
@@ -60,7 +63,8 @@ class LocalTime extends React.PureComponent {
 LocalTime.propTypes = {
   title: PropTypes.string,
   interval: PropTypes.number,
-  timeZone: PropTypes.string
+  timeZone: PropTypes.string,
+  showDate: PropTypes.bool
 };
 
 export default LocalTime;
