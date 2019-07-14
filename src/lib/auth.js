@@ -1,5 +1,5 @@
 import { Base64 } from "js-base64";
-import auth from "../config/auth";
+import auth from "../auth";
 
 export const basicAuthHeader = key => {
   const credentials = auth[key];
