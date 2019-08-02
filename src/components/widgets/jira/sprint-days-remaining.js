@@ -20,7 +20,7 @@ class JiraSprintDaysRemaining extends React.Component {
   };
 
   state = {
-    days: 0,
+    daysRemaining: 0,
     endDate: null,
     percentCompleted: 0,
     error: false,
@@ -52,19 +52,25 @@ class JiraSprintDaysRemaining extends React.Component {
       const startDate = parseISO(json.values[0].startDate);
       const endDate = parseISO(json.values[0].endDate);
       const now = new Date();
-      const difference = useBusinessDays
+      const sprintLength = useBusinessDays
+        ? differenceInBusinessDays(startDate, endDate)
+        : differenceInCalendarDays(startDate, endDate);
+      const daysFromStart = useBusinessDays
+        ? differenceInBusinessDays(startDate, now)
+        : differenceInCalendarDays(startDate, now);
+      const daysToEnd = useBusinessDays
         ? differenceInBusinessDays(now, endDate)
         : differenceInCalendarDays(now, endDate);
-      const days = Math.max(0, Math.abs(difference));
+      const daysRemaining = Math.max(0, Math.abs(daysToEnd));
       const percentCompleted = Math.min(
         100,
-        ((now - startDate) / (endDate - startDate)) * 100
+        (100 * daysFromStart) / sprintLength
       );
 
       this.setState({
         startDate,
         endDate,
-        days,
+        daysRemaining,
         percentCompleted,
         error: false,
         loading: false
@@ -76,7 +82,7 @@ class JiraSprintDaysRemaining extends React.Component {
 
   render() {
     const {
-      days,
+      daysRemaining,
       startDate,
       endDate,
       percentCompleted,
@@ -87,7 +93,7 @@ class JiraSprintDaysRemaining extends React.Component {
 
     return (
       <Widget title={title} loading={loading} error={error}>
-        <Counter value={days} />
+        <Counter value={daysRemaining} />
         <ProgressBar
           value={percentCompleted}
           title={`Started ${startDate &&
