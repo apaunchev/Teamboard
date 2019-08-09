@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;
+  justify-content: center;
 `;
 
 const Bar = styled.div`
@@ -11,12 +12,11 @@ const Bar = styled.div`
   flex-direction: column;
   align-self: center;
   height: 128px;
-  width: 48px;
+  width: 64px;
 `;
 
 const Segment = styled.div`
   display: block;
-  min-height: 20px;
 `;
 
 const DataTable = styled.table`
